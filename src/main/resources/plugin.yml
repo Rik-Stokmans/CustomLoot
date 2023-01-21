@@ -4,3 +4,7 @@ main: customloot.customloot.CustomLoot
 api-version: 1.18
 authors: [ Duffie13 ]
 description: A plugin that adds custom loot to your minecraft server
+commands:
+  OpenLootMenu:
+    permission: op
+    usage: /openLootMenu
