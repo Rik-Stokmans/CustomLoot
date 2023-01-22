@@ -1,5 +1,7 @@
 package customloot.customloot.variables;
 
+import customloot.customloot.Loot.GeneralItem;
+import customloot.customloot.Loot.LootItem;
 import javaslang.Tuple4;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,19 +16,13 @@ import java.util.Map;
 
 public class VariableHandler {
 
+
+
+    /*
     public static HashMap<String, Tuple4<String, ArrayList<String>, ArrayList<String>, Material>> itemsTable = new HashMap<>();
 
+
     public static void saveVariables(String path) {
-        /*ArrayList<String> l = new ArrayList<>();
-        l.add("&7very nice lore");
-        l.add("&7very nice second lore");
-
-        ArrayList<String> n = new ArrayList<>();
-        n.add("Damage:7.3");
-        n.add("Penetration:4");
-        n.add("CriticalHitChance:33.3");
-
-        VariableHandler.itemsTable.put("testItem", new Tuple4<>("testname", l, n, Material.KELP));*/
 
         File testConfigFile = new File(path, "Variables/lootItems.yml");
         testConfigFile.delete();
@@ -74,6 +70,7 @@ public class VariableHandler {
         }
         System.out.println("[CustomLoot] Loaded " + itemsTable.size() + " items");
     }
+    */
 
     public static void saveFile(YamlConfiguration file, String s, String Path) throws IOException {
         file.save(new File(Path, s));

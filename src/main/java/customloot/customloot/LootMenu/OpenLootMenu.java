@@ -1,4 +1,4 @@
-package customloot.customloot.variables;
+package customloot.customloot.LootMenu;
 
 import customloot.customloot.CustomLoot;
 import org.bukkit.Bukkit;
@@ -13,14 +13,8 @@ public class OpenLootMenu implements CommandExecutor {
         if (sender instanceof Player) {
             Bukkit.getOnlinePlayers();
             Player player = (Player) sender;
-            if (CustomLoot.lootMenu.inv.getViewers().size() == 0) {
-                CustomLoot.lootMenu.openInventory(player);
-                return true;
-            } else {
-                player.sendMessage("&cSomeone else is already configuring the loot items");
-                return false;
-            }
-
+            CustomLoot.lootMenu.openInventory(player);
+            return true;
         } else {
             return false;
         }
