@@ -5,10 +5,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 
 public class GeneralItem {
-    String name;
-    int rarity;
-    int worth;
-    ArrayList<String> lores;
+    private String name;
+    private int rarity;
+    private int worth;
+    private ArrayList<String> lores;
 
     public GeneralItem(String _name, int _rarity, int _worth, ArrayList<String> _lores) {
         name = _name;
@@ -39,5 +39,13 @@ public class GeneralItem {
 
     public void setWorth(int worth) {
         this.worth = worth;
+    }
+
+    public ArrayList<String> getLores() {
+        return lores;
+    }
+
+    public void setLores(ArrayList<String> lores) {
+        this.lores = lores;
     }
 }

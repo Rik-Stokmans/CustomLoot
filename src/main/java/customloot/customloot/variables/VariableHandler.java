@@ -18,7 +18,7 @@ public class VariableHandler {
 
 
 
-    /*
+
     public static HashMap<String, Tuple4<String, ArrayList<String>, ArrayList<String>, Material>> itemsTable = new HashMap<>();
 
 
@@ -70,7 +70,7 @@ public class VariableHandler {
         }
         System.out.println("[CustomLoot] Loaded " + itemsTable.size() + " items");
     }
-    */
+
 
     public static void saveFile(YamlConfiguration file, String s, String Path) throws IOException {
         file.save(new File(Path, s));
