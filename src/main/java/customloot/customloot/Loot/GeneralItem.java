@@ -10,13 +10,15 @@ public class GeneralItem {
     private int value;
     private ArrayList<String> lores;
     private Material itemType;
+    private String identifier;
 
-    public GeneralItem(String _name, int _rarity, int _value, ArrayList<String> _lores, Material _itemType) {
+    public GeneralItem(String _name, int _rarity, int _value, ArrayList<String> _lores, Material _itemType, String _identifier) {
         name = _name;
         rarity = _rarity;
         value = _value;
         lores = _lores;
         itemType = _itemType;
+        identifier = _identifier;
     }
 
     public String getName() {
@@ -57,5 +59,13 @@ public class GeneralItem {
 
     public void setItemType(Material itemType) {
         this.itemType = itemType;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

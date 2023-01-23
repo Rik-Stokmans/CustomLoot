@@ -15,8 +15,8 @@ public class Talisman extends GeneralItem {
     private int attackBonus;
     private int lifesteal;
 
-    public Talisman(String _name, int _rarity, int _value, ArrayList<String> _lores, Material _itemType, int _health, int _minLvl, int _xpBonus, int _lootBonus, int _attackBonus, int _lifesteal) {
-        super(_name, _rarity, _value, _lores, _itemType);
+    public Talisman(String _name, int _rarity, int _value, ArrayList<String> _lores, Material _itemType, String _identifier, int _health, int _minLvl, int _xpBonus, int _lootBonus, int _attackBonus, int _lifesteal) {
+        super(_name, _rarity, _value, _lores, _itemType, _identifier);
         health = _health;
         minLvl = _minLvl;
         xpBonus = _xpBonus;

@@ -165,7 +165,7 @@ public class VariableHandler {
                     lores.add(itemsFile.getString("lootitems." + lootItemKey + ".lores." + lootItemLoreKey));
                 });
 
-                Loot lootItem = new Loot(name, rarity, value, lores, material);
+                Loot lootItem = new Loot(name, rarity, value, lores, material, lootItemKey);
                 lootItems.put(lootItemKey, lootItem);
             });
         }
@@ -206,7 +206,7 @@ public class VariableHandler {
                     lores.add(itemsFile.getString("weapons." + weaponItemKey + ".lores." + lootItemLoreKey));
                 });
 
-                Weapon weaponItem = new Weapon(name, rarity, value, lores, material, damage, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
+                Weapon weaponItem = new Weapon(name, rarity, value, lores, material, weaponItemKey, damage, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
                 weaponItems.put(weaponItemKey, weaponItem);
             });
         }
@@ -247,7 +247,7 @@ public class VariableHandler {
                     lores.add(itemsFile.getString("talismans." + talismanItemKey + ".lores." + lootItemLoreKey));
                 });
 
-                Talisman talismanItem = new Talisman(name, rarity, value, lores, material, health, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
+                Talisman talismanItem = new Talisman(name, rarity, value, lores, material, talismanItemKey, health, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
                 talismanItems.put(talismanItemKey, talismanItem);
             });
         }
@@ -289,7 +289,7 @@ public class VariableHandler {
                     lores.add(itemsFile.getString("potions." + potionItemKey + ".lores." + lootItemLoreKey));
                 });
 
-                Potion potionItem = new Potion(name, rarity, value, lores, material, health, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
+                Potion potionItem = new Potion(name, rarity, value, lores, material, potionItemKey, health, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
                 potionItems.put(potionItemKey, potionItem);
             });
         }
