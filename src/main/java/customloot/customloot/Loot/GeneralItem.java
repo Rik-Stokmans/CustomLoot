@@ -1,20 +1,22 @@
 package customloot.customloot.Loot;
 
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 
 public class GeneralItem {
     private String name;
     private int rarity;
-    private int worth;
+    private int value;
     private ArrayList<String> lores;
+    private Material itemType;
 
-    public GeneralItem(String _name, int _rarity, int _worth, ArrayList<String> _lores) {
+    public GeneralItem(String _name, int _rarity, int _value, ArrayList<String> _lores, Material _itemType) {
         name = _name;
         rarity = _rarity;
-        worth = _worth;
+        value = _value;
         lores = _lores;
+        itemType = _itemType;
     }
 
     public String getName() {
@@ -33,12 +35,12 @@ public class GeneralItem {
         this.rarity = rarity;
     }
 
-    public int getWorth() {
-        return worth;
+    public int getValue() {
+        return value;
     }
 
-    public void setWorth(int worth) {
-        this.worth = worth;
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public ArrayList<String> getLores() {
@@ -47,5 +49,13 @@ public class GeneralItem {
 
     public void setLores(ArrayList<String> lores) {
         this.lores = lores;
+    }
+
+    public Material getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(Material itemType) {
+        this.itemType = itemType;
     }
 }

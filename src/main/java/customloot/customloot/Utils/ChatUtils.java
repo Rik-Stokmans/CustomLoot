@@ -3,6 +3,7 @@ package customloot.customloot.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,6 +11,15 @@ public class ChatUtils {
 
     public static String format(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
+    }
+
+    public static ArrayList<String> formatList(ArrayList<String> list) {
+        ArrayList<String> newList = new ArrayList<>();
+
+        for (String text : list) {
+            newList.add(format(text));
+        }
+        return newList;
     }
 
     private static final Pattern PATTERN = Pattern.compile(

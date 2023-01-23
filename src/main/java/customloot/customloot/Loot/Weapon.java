@@ -1,5 +1,7 @@
 package customloot.customloot.Loot;
 
+import org.bukkit.Material;
+
 import java.util.ArrayList;
 
 public class Weapon extends GeneralItem {
@@ -13,8 +15,8 @@ public class Weapon extends GeneralItem {
     private int attackBonus;
     private int lifesteal;
 
-    public Weapon(String _name, int _rarity, int _worth, ArrayList<String> _lores, int _damage, int _minLvl, int _xpBonus, int _lootBonus, int _attackBonus, int _lifesteal) {
-        super(_name, _rarity, _worth, _lores);
+    public Weapon(String _name, int _rarity, int _value, ArrayList<String> _lores, Material _itemType, int _damage, int _minLvl, int _xpBonus, int _lootBonus, int _attackBonus, int _lifesteal) {
+        super(_name, _rarity, _value, _lores, _itemType);
         damage = _damage;
         minLvl = _minLvl;
         xpBonus = _xpBonus;
