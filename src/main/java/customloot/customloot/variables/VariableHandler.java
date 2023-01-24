@@ -161,9 +161,11 @@ public class VariableHandler {
                 Material material = Material.getMaterial(itemsFile.getString("lootitems." + lootItemKey + ".item-type"));
 
                 ArrayList<String> lores = new ArrayList<>();
-                itemsFile.getConfigurationSection("lootitems." + lootItemKey + ".lores").getKeys(false).forEach(lootItemLoreKey -> {
-                    lores.add(itemsFile.getString("lootitems." + lootItemKey + ".lores." + lootItemLoreKey));
-                });
+                if (itemsFile.contains("lootitems." + lootItemKey + ".lores")) {
+                    itemsFile.getConfigurationSection("lootitems." + lootItemKey + ".lores").getKeys(false).forEach(lootItemLoreKey -> {
+                        lores.add(itemsFile.getString("lootitems." + lootItemKey + ".lores." + lootItemLoreKey));
+                    });
+                }
 
                 Loot lootItem = new Loot(name, rarity, value, lores, material, lootItemKey);
                 lootItems.put(lootItemKey, lootItem);
@@ -202,9 +204,11 @@ public class VariableHandler {
                 }
 
                 ArrayList<String> lores = new ArrayList<>();
-                itemsFile.getConfigurationSection("weapons." + weaponItemKey + ".lores").getKeys(false).forEach(lootItemLoreKey -> {
-                    lores.add(itemsFile.getString("weapons." + weaponItemKey + ".lores." + lootItemLoreKey));
-                });
+                if (itemsFile.contains("weapons." + weaponItemKey + ".lores")) {
+                    itemsFile.getConfigurationSection("weapons." + weaponItemKey + ".lores").getKeys(false).forEach(lootItemLoreKey -> {
+                        lores.add(itemsFile.getString("weapons." + weaponItemKey + ".lores." + lootItemLoreKey));
+                    });
+                }
 
                 Weapon weaponItem = new Weapon(name, rarity, value, lores, material, weaponItemKey, damage, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
                 weaponItems.put(weaponItemKey, weaponItem);
@@ -243,9 +247,11 @@ public class VariableHandler {
                 }
 
                 ArrayList<String> lores = new ArrayList<>();
-                itemsFile.getConfigurationSection("talismans." + talismanItemKey + ".lores").getKeys(false).forEach(lootItemLoreKey -> {
-                    lores.add(itemsFile.getString("talismans." + talismanItemKey + ".lores." + lootItemLoreKey));
-                });
+                if (itemsFile.contains("talismans." + talismanItemKey + ".lores")) {
+                    itemsFile.getConfigurationSection("talismans." + talismanItemKey + ".lores").getKeys(false).forEach(lootItemLoreKey -> {
+                        lores.add(itemsFile.getString("talismans." + talismanItemKey + ".lores." + lootItemLoreKey));
+                    });
+                }
 
                 Talisman talismanItem = new Talisman(name, rarity, value, lores, material, talismanItemKey, health, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
                 talismanItems.put(talismanItemKey, talismanItem);
@@ -285,9 +291,11 @@ public class VariableHandler {
                 }
 
                 ArrayList<String> lores = new ArrayList<>();
-                itemsFile.getConfigurationSection("potions." + potionItemKey + ".lores").getKeys(false).forEach(lootItemLoreKey -> {
-                    lores.add(itemsFile.getString("potions." + potionItemKey + ".lores." + lootItemLoreKey));
-                });
+                if (itemsFile.contains("potions." + potionItemKey + ".lores")) {
+                    itemsFile.getConfigurationSection("potions." + potionItemKey + ".lores").getKeys(false).forEach(lootItemLoreKey -> {
+                        lores.add(itemsFile.getString("potions." + potionItemKey + ".lores." + lootItemLoreKey));
+                    });
+                }
 
                 Potion potionItem = new Potion(name, rarity, value, lores, material, potionItemKey, health, minLvl, xpBonus, lootBonus, attackBonus, lifesteal);
                 potionItems.put(potionItemKey, potionItem);

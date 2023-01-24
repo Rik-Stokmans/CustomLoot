@@ -24,13 +24,13 @@ public final class CustomLoot extends JavaPlugin {
         ArrayList<String> lores = new ArrayList<>();
         lores.add("&7nice lore");
         lores.add("&7very nice lore");
-        Loot lootItem = new Loot("&7Funny Item", 2, 132, lores, Material.BEACON);
-        Weapon weaponItem = new Weapon("&7Nice Sword", 2, 132, lores, Material.IRON_SWORD, 3, 5, 1, 2, 3, 4);
-        Talisman talismanItem = new Talisman("&7Expensive Ring", 2, 132, lores, Material.DIAMOND, 3, 5, 1, 2, 3, 4);
-        Potion potionItem = new Potion("&7Tasty Potion", 2, 132, lores, Material.EXPERIENCE_BOTTLE, 3, 5, 1, 2, 3, 4);
-        Weapon weaponItem2 = new Weapon("&7Useless Sword", 0, 1, lores, Material.WOODEN_SWORD, 0, 0, 0, 0, 0, 0);
-        Talisman talismanItem2 = new Talisman("&7Useless Ring", 0, 1, lores, Material.BROWN_DYE, 0, 0, 0, 0, 0, 0);
-        Potion potionItem2 = new Potion("&7Useless Potion", 0, 1, lores, Material.GLASS_BOTTLE, 0, 0, 0, 0, 0, 0);
+        Loot lootItem = new Loot("&7Funny Item", 2, 132, lores, Material.BEACON, "test");
+        Weapon weaponItem = new Weapon("&7Nice Sword", 2, 132, lores, Material.IRON_SWORD, "sword", 3, 5, 1, 2, 3, 4);
+        Talisman talismanItem = new Talisman("&7Expensive Ring", 2, 132, lores, Material.DIAMOND, "talisman", 3, 5, 1, 2, 3, 4);
+        Potion potionItem = new Potion("&7Tasty Potion", 2, 132, lores, Material.EXPERIENCE_BOTTLE, "potion", 3, 5, 1, 2, 3, 4);
+        Weapon weaponItem2 = new Weapon("&7Useless Sword", 0, 1, lores, Material.WOODEN_SWORD, "sword2", 0, 0, 0, 0, 0, 0);
+        Talisman talismanItem2 = new Talisman("&7Useless Ring", 0, 1, lores, Material.BROWN_DYE, "talisman2", 0, 0, 0, 0, 0, 0);
+        Potion potionItem2 = new Potion("&7Useless Potion", 0, 1, lores, Material.GLASS_BOTTLE, "potion2", 0, 0, 0, 0, 0, 0);
 
         lootItems.put("test", lootItem);
 

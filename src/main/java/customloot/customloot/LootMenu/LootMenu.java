@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,6 +38,19 @@ public class LootMenu implements Listener {
     int talismanItemsListPage = 0;
     int potionItemsListPage = 0;
 
+    String lootInvEditItemIdentifier;
+    String weaponInvEditItemIdentifier;
+    String talismanInvEditItemIdentifier;
+    String potionInvEditItemIdentifier;
+
+    public static Player lootInvEditor;
+    public static String expectedInputTypeLoot = "NONE";
+    public static Player weaponInvEditor;
+    public static String expectedInputTypeWeapon = "NONE";
+    public static Player talismanInvEditor;
+    public static String expectedInputTypeTalisman = "NONE";
+    public static Player potionInvEditor;
+    public static String expectedInputTypePotion = "NONE";
 
     ItemStack lootCategoryItem;
     ItemStack weaponCategoryItem;
@@ -54,7 +68,7 @@ public class LootMenu implements Listener {
     ItemStack lightDivider;
     ItemStack editNameButton;
     ItemStack editLoreButton;
-    ItemStack editWorthButton;
+    ItemStack editValueButton;
     ItemStack editDamageButton;
     ItemStack editHealthButton;
     ItemStack editMinLvlButton;
@@ -117,32 +131,32 @@ public class LootMenu implements Listener {
         removeItemButton = createGuiItem("&cRemove Item", removeItemButtonLore, Material.RED_SHULKER_BOX);
 
         ArrayList<String> editNameButtonLore = new ArrayList<>();
-        editNameButtonLore.add(format("&7Remove a custom item"));
-        editNameButton = createGuiItem("&cRemove Item", editNameButtonLore, Material.NAME_TAG);
+        editNameButtonLore.add(format("&7Edit the name of this item"));
+        editNameButton = createGuiItem("&eEdit Name", editNameButtonLore, Material.NAME_TAG);
 
         ArrayList<String> editLoreButtonLore = new ArrayList<>();
-        editLoreButtonLore.add(format("&7Remove a custom item"));
-        editLoreButton = createGuiItem("&cRemove Item", editLoreButtonLore, Material.OAK_SIGN);
+        editLoreButtonLore.add(format("&7Edit the lore of this item"));
+        editLoreButton = createGuiItem("&eEdit Lore", editLoreButtonLore, Material.OAK_SIGN);
 
-        ArrayList<String> editWorthButtonLore = new ArrayList<>();
-        editWorthButtonLore.add(format("&7Remove a custom item"));
-        editWorthButton = createGuiItem("&cRemove Item", editWorthButtonLore, Material.RAW_GOLD);
+        ArrayList<String> editValueButtonLore = new ArrayList<>();
+        editValueButtonLore.add(format("&7Edit the value of this item"));
+        editValueButton = createGuiItem("&eEdit Value", editValueButtonLore, Material.RAW_GOLD);
 
         ArrayList<String> editDamageButtonLore = new ArrayList<>();
-        editDamageButtonLore.add(format("&7Remove a custom item"));
-        editDamageButton = createGuiItem("&cRemove Item", editDamageButtonLore, Material.RED_DYE);
+        editDamageButtonLore.add(format("&7Edit the damage the item deals"));
+        editDamageButton = createGuiItem("&eEdit Damage", editDamageButtonLore, Material.RED_DYE);
 
         ArrayList<String> editHealthButtonLore = new ArrayList<>();
-        editHealthButtonLore.add(format("&7Remove a custom item"));
-        editHealthButton = createGuiItem("&cRemove Item", editHealthButtonLore, Material.RED_DYE);
+        editHealthButtonLore.add(format("&7Edit the health amount of this item"));
+        editHealthButton = createGuiItem("&eEdit health", editHealthButtonLore, Material.RED_DYE);
 
         ArrayList<String> editMinLvlButtonLore = new ArrayList<>();
-        editMinLvlButtonLore.add(format("&7Remove a custom item"));
-        editMinLvlButton = createGuiItem("&cRemove Item", editMinLvlButtonLore, Material.EXPERIENCE_BOTTLE);
+        editMinLvlButtonLore.add(format("&7Edit the minimal level of this item"));
+        editMinLvlButton = createGuiItem("&eEdit Min. Lvl", editMinLvlButtonLore, Material.EXPERIENCE_BOTTLE);
 
         ArrayList<String> editAttributeButtonLore = new ArrayList<>();
-        editAttributeButtonLore.add(format("&7Remove a custom item"));
-        editAttributeButton = createGuiItem("&cRemove Item", editAttributeButtonLore, Material.BOOK);
+        editAttributeButtonLore.add(format("&7Edit the attributes of this item"));
+        editAttributeButton = createGuiItem("&eEdit Attributes", editAttributeButtonLore, Material.BOOK);
 
         darkDivider = createGuiItem(" ", new ArrayList<>(), Material.BLACK_STAINED_GLASS_PANE);
         lightDivider = createGuiItem(" ", new ArrayList<>(), Material.GRAY_STAINED_GLASS_PANE);
@@ -181,13 +195,15 @@ public class LootMenu implements Listener {
             lootItemListInv.setItem(53, removeItemButton);
         } else {
 
+            for (int i = 36; i <= 44; i++) lootItemListInv.setItem(i, darkDivider);
             for (int i = 45; i <= 53; i++) lootItemListInv.setItem(i, lightDivider);
 
             lootItemListInv.setItem(20, editNameButton);
             lootItemListInv.setItem(22, editLoreButton);
-            lootItemListInv.setItem(24, editWorthButton);
+            lootItemListInv.setItem(24, editValueButton);
 
             lootItemListInv.setItem(45, backButton);
+            lootItemListInv.setItem(49, generateLootItem(lootItems.get(lootInvEditItemIdentifier)));
         }
     }
 
@@ -211,17 +227,19 @@ public class LootMenu implements Listener {
             weaponItemListInv.setItem(53, removeItemButton);
         } else {
 
+            for (int i = 36; i <= 44; i++) weaponItemListInv.setItem(i, darkDivider);
             for (int i = 45; i <= 53; i++) weaponItemListInv.setItem(i, lightDivider);
 
-            weaponItemListInv.setItem(20, editNameButton);
-            weaponItemListInv.setItem(22, editLoreButton);
-            weaponItemListInv.setItem(24, editWorthButton);
+            weaponItemListInv.setItem(11, editNameButton);
+            weaponItemListInv.setItem(13, editLoreButton);
+            weaponItemListInv.setItem(15, editValueButton);
 
-            weaponItemListInv.setItem(38, editDamageButton);
-            weaponItemListInv.setItem(40, editMinLvlButton);
-            weaponItemListInv.setItem(42, editAttributeButton);
+            weaponItemListInv.setItem(29, editDamageButton);
+            weaponItemListInv.setItem(31, editMinLvlButton);
+            weaponItemListInv.setItem(33, editAttributeButton);
 
             weaponItemListInv.setItem(45, backButton);
+            weaponItemListInv.setItem(49, generateWeaponItem(weaponItems.get(weaponInvEditItemIdentifier)));
         }
     }
 
@@ -245,17 +263,19 @@ public class LootMenu implements Listener {
             talismanItemListInv.setItem(53, removeItemButton);
         } else {
 
+            for (int i = 36; i <= 44; i++) talismanItemListInv.setItem(i, darkDivider);
             for (int i = 45; i <= 53; i++) talismanItemListInv.setItem(i, lightDivider);
 
-            talismanItemListInv.setItem(20, editNameButton);
-            talismanItemListInv.setItem(22, editLoreButton);
-            talismanItemListInv.setItem(24, editWorthButton);
+            talismanItemListInv.setItem(11, editNameButton);
+            talismanItemListInv.setItem(13, editLoreButton);
+            talismanItemListInv.setItem(15, editValueButton);
 
-            talismanItemListInv.setItem(38, editHealthButton);
-            talismanItemListInv.setItem(40, editMinLvlButton);
-            talismanItemListInv.setItem(42, editAttributeButton);
+            talismanItemListInv.setItem(29, editHealthButton);
+            talismanItemListInv.setItem(31, editMinLvlButton);
+            talismanItemListInv.setItem(33, editAttributeButton);
 
             talismanItemListInv.setItem(45, backButton);
+            talismanItemListInv.setItem(49, generateTalismanItem(talismanItems.get(talismanInvEditItemIdentifier)));
         }
     }
 
@@ -279,17 +299,19 @@ public class LootMenu implements Listener {
             potionItemListInv.setItem(53, removeItemButton);
         } else {
 
+            for (int i = 36; i <= 44; i++) potionItemListInv.setItem(i, darkDivider);
             for (int i = 45; i <= 53; i++) potionItemListInv.setItem(i, lightDivider);
 
-            potionItemListInv.setItem(20, editNameButton);
-            potionItemListInv.setItem(22, editLoreButton);
-            potionItemListInv.setItem(24, editWorthButton);
+            potionItemListInv.setItem(11, editNameButton);
+            potionItemListInv.setItem(13, editLoreButton);
+            potionItemListInv.setItem(15, editValueButton);
 
-            potionItemListInv.setItem(38, editHealthButton);
-            potionItemListInv.setItem(40, editMinLvlButton);
-            potionItemListInv.setItem(42, editAttributeButton);
+            potionItemListInv.setItem(29, editHealthButton);
+            potionItemListInv.setItem(31, editMinLvlButton);
+            potionItemListInv.setItem(33, editAttributeButton);
 
             potionItemListInv.setItem(45, backButton);
+            potionItemListInv.setItem(49, generatePotionItem(potionItems.get(potionInvEditItemIdentifier)));
         }
     }
 
@@ -534,16 +556,16 @@ public class LootMenu implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
         Inventory inv = e.getInventory();
-        if (inv.equals(lootItemListInv)) {
+        if (inv.equals(lootItemListInv) && !lootItemListInEditState) {
             categorySelectionInv.setItem(10, lootCategoryItem);
         }
-        else if (inv.equals(weaponItemListInv)) {
+        else if (inv.equals(weaponItemListInv) && !weaponItemListInEditState) {
             categorySelectionInv.setItem(12, weaponCategoryItem);
         }
-        else if (inv.equals(talismanItemListInv)) {
+        else if (inv.equals(talismanItemListInv) && !talismanItemListInEditState) {
             categorySelectionInv.setItem(14, talismanCategoryItem);
         }
-        else if (inv.equals(potionItemListInv)) {
+        else if (inv.equals(potionItemListInv) && !potionItemListInEditState) {
             categorySelectionInv.setItem(16, potionCategoryItem);
         }
     }
@@ -579,146 +601,496 @@ public class LootMenu implements Listener {
             else if (clickedItem.isSimilar(potionCategoryItem)) openInventory(p, potionItemListInv);
 
             if (currentInv.equals(lootItemListInv)) {
-                int maxPageNumber = (int) Math.ceil(lootItems.size()/36);
-                if (clickedSlot <= 35) enableEditModeLootInv(clickedItem);
+                if (!lootItemListInEditState) {
+                    int maxPageNumber = (int) Math.ceil(lootItems.size() / 36);
+                    if (clickedSlot <= 35) enableEditModeLootInv(clickedItem, p);
 
-                if (clickedItem.equals(backButton)) {
-                    if (lootItemListInEditState) {
-                        lootItemListInEditState = false;
-                        reloadLootMenu();
+                    if (clickedItem.equals(backButton)) {
+                        if (lootItemListInEditState) {
+                            lootItemListInEditState = false;
+                            reloadLootMenu();
+                        } else {
+                            openInventory(p, categorySelectionInv);
+                            lootInvEditor = null;
+                        }
+                    }
+                    else if (clickedItem.isSimilar(previousPageButton)) {
+                        if (lootItemsListPage > 0) {
+                            lootItemsListPage--;
+                        }
+                    }
+                    else if (clickedItem.isSimilar(nextPageButton)) {
+                        if (lootItemsListPage < maxPageNumber) {
+                            lootItemsListPage++;
+                        }
+                    }
+                    Bukkit.broadcastMessage(String.valueOf(lootItemsListPage));
+                }  else {
+                    if (!clickedItem.isSimilar(backButton)) {
+                        handleLootItemEdit(clickedItem);
                     } else {
-                        openInventory(p, categorySelectionInv);
+                        lootItemListInEditState = false;
+                        openInventory(p, lootItemListInv);
+                        reloadLootMenu();
                     }
                 }
-                else if (clickedItem.isSimilar(previousPageButton)) {
-                    if (lootItemsListPage > 0) {
-                        lootItemsListPage--;
-                    }
-                }
-                else if (clickedItem.isSimilar(nextPageButton)) {
-                    if (lootItemsListPage < maxPageNumber) {
-                        lootItemsListPage++;
-                    }
-                }
-                Bukkit.broadcastMessage(String.valueOf(lootItemsListPage));
             }
 
             if (currentInv.equals(weaponItemListInv)) {
-                int maxPageNumber = (int) Math.ceil(weaponItems.size()/36);
-                if (clickedSlot <= 35) enableEditModeWeaponInv(clickedItem);
+                if (!weaponItemListInEditState) {
+                    int maxPageNumber = (int) Math.ceil(weaponItems.size()/36);
+                    if (clickedSlot <= 35) enableEditModeWeaponInv(clickedItem, p);
 
-                if (clickedItem.equals(backButton)) {
-                    if (weaponItemListInEditState) {
-                        weaponItemListInEditState = false;
-                        reloadWeaponMenu();
+                    if (clickedItem.equals(backButton)) {
+                        if (weaponItemListInEditState) {
+                            weaponItemListInEditState = false;
+                            reloadWeaponMenu();
+                        } else {
+                            openInventory(p, categorySelectionInv);
+                            weaponInvEditor = null;
+                        }
+                    }
+                    else if (clickedItem.isSimilar(previousPageButton)) {
+                        if (weaponItemsListPage > 0) {
+                            weaponItemsListPage--;
+                        }
+                    }
+                    else if (clickedItem.isSimilar(nextPageButton)) {
+                        if (weaponItemsListPage < maxPageNumber) {
+                            weaponItemsListPage++;
+                        }
+                    }
+                    Bukkit.broadcastMessage(String.valueOf(weaponItemsListPage));
+                } else {
+                    if (!clickedItem.isSimilar(backButton)) {
+                        handleWeaponItemEdit(clickedItem);
                     } else {
-                        openInventory(p, categorySelectionInv);
+                        weaponItemListInEditState = false;
+                        openInventory(p, weaponItemListInv);
+                        reloadWeaponMenu();
                     }
                 }
-                else if (clickedItem.isSimilar(previousPageButton)) {
-                    if (weaponItemsListPage > 0) {
-                        weaponItemsListPage--;
-                    }
-                }
-                else if (clickedItem.isSimilar(nextPageButton)) {
-                    if (weaponItemsListPage < maxPageNumber) {
-                        weaponItemsListPage++;
-                    }
-                }
-                Bukkit.broadcastMessage(String.valueOf(weaponItemsListPage));
             }
 
             if (currentInv.equals(talismanItemListInv)) {
-                int maxPageNumber = (int) Math.ceil(talismanItems.size()/36);
-                if (clickedSlot <= 35) enableEditModeTalismanInv(clickedItem);
+                if (!talismanItemListInEditState) {
+                    int maxPageNumber = (int) Math.ceil(talismanItems.size()/36);
+                    if (clickedSlot <= 35) enableEditModeTalismanInv(clickedItem, p);
 
-                if (clickedItem.equals(backButton)) {
-                    if (talismanItemListInEditState) {
-                        talismanItemListInEditState = false;
-                        reloadTalismanMenu();
+                    if (clickedItem.equals(backButton)) {
+                        if (talismanItemListInEditState) {
+                            talismanItemListInEditState = false;
+                            reloadTalismanMenu();
+                        } else {
+                            openInventory(p, categorySelectionInv);
+                            talismanInvEditor = null;
+                        }
+                    }
+                    else if (clickedItem.isSimilar(previousPageButton)) {
+                        if (talismanItemsListPage > 0) {
+                            talismanItemsListPage--;
+                        }
+                    }
+                    else if (clickedItem.isSimilar(nextPageButton)) {
+                        if (talismanItemsListPage < maxPageNumber) {
+                            talismanItemsListPage++;
+                        }
+                    }
+                    Bukkit.broadcastMessage(String.valueOf(talismanItemsListPage));
+                } else {
+                    if (!clickedItem.isSimilar(backButton)) {
+                        handleTalismanItemEdit(clickedItem);
                     } else {
-                        openInventory(p, categorySelectionInv);
+                        talismanItemListInEditState = false;
+                        openInventory(p, talismanItemListInv);
+                        reloadTalismanMenu();
                     }
                 }
-                else if (clickedItem.isSimilar(previousPageButton)) {
-                    if (talismanItemsListPage > 0) {
-                        talismanItemsListPage--;
-                    }
-                }
-                else if (clickedItem.isSimilar(nextPageButton)) {
-                    if (talismanItemsListPage < maxPageNumber) {
-                        talismanItemsListPage++;
-                    }
-                }
-                Bukkit.broadcastMessage(String.valueOf(talismanItemsListPage));
             }
 
             if (currentInv.equals(potionItemListInv)) {
-                int maxPageNumber = (int) Math.ceil(potionItems.size()/36);
-                if (clickedSlot <= 35) enableEditModePotionInv(clickedItem);
+                if (!potionItemListInEditState) {
+                    int maxPageNumber = (int) Math.ceil(potionItems.size()/36);
+                    if (clickedSlot <= 35) enableEditModePotionInv(clickedItem, p);
 
-                if (clickedItem.equals(backButton)) {
-                    if (potionItemListInEditState) {
-                        potionItemListInEditState = false;
-                        reloadPotionMenu();
+                    if (clickedItem.equals(backButton)) {
+                        if (potionItemListInEditState) {
+                            potionItemListInEditState = false;
+                            reloadPotionMenu();
+                        } else {
+                            openInventory(p, categorySelectionInv);
+                            potionInvEditor = null;
+                        }
+                    }
+                    else if (clickedItem.isSimilar(previousPageButton)) {
+                        if (potionItemsListPage > 0) {
+                            potionItemsListPage--;
+                        }
+                    }
+                    else if (clickedItem.isSimilar(nextPageButton)) {
+                        if (potionItemsListPage < maxPageNumber) {
+                            potionItemsListPage++;
+                        }
+                    }
+                    Bukkit.broadcastMessage(String.valueOf(talismanItemsListPage));
+                } else {
+                    if (!clickedItem.isSimilar(backButton)) {
+                        handlePotionItemEdit(clickedItem);
                     } else {
-                        openInventory(p, categorySelectionInv);
+                        potionItemListInEditState = false;
+                        openInventory(p, potionItemListInv);
+                        reloadPotionMenu();
                     }
                 }
-                else if (clickedItem.isSimilar(previousPageButton)) {
-                    if (potionItemsListPage > 0) {
-                        potionItemsListPage--;
-                    }
-                }
-                else if (clickedItem.isSimilar(nextPageButton)) {
-                    if (potionItemsListPage < maxPageNumber) {
-                        potionItemsListPage++;
-                    }
-                }
-                Bukkit.broadcastMessage(String.valueOf(talismanItemsListPage));
             }
+        }
+    }
+
+    private void handleLootItemEdit(ItemStack clickedItem) {
+        if (clickedItem.isSimilar(editNameButton)) {
+            expectedInputTypeLoot = "NAME";
+            lootInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editLoreButton)) {
+            expectedInputTypeLoot = "LORE";
+            lootInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editValueButton)) {
+            expectedInputTypeLoot = "VALUE";
+            lootInvEditor.closeInventory();
+        }
+    }
+
+    private void handleWeaponItemEdit(ItemStack clickedItem) {
+        if (clickedItem.isSimilar(editNameButton)) {
+            expectedInputTypeWeapon = "NAME";
+            weaponInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editLoreButton)) {
+            expectedInputTypeWeapon = "LORE";
+            weaponInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editValueButton)) {
+            expectedInputTypeWeapon = "VALUE";
+            weaponInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editDamageButton)) {
+
+        }
+        else if (clickedItem.isSimilar(editMinLvlButton)) {
+
+        }
+        else if (clickedItem.isSimilar(editAttributeButton)) {
 
         }
     }
 
-    private void enableEditModeLootInv(ItemStack item) {
+    private void handleTalismanItemEdit(ItemStack clickedItem) {
+        if (clickedItem.isSimilar(editNameButton)) {
+            expectedInputTypeTalisman = "NAME";
+            talismanInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editLoreButton)) {
+            expectedInputTypeTalisman = "LORE";
+            talismanInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editValueButton)) {
+            expectedInputTypeTalisman = "VALUE";
+            talismanInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editHealthButton)) {
+
+        }
+        else if (clickedItem.isSimilar(editMinLvlButton)) {
+
+        }
+        else if (clickedItem.isSimilar(editAttributeButton)) {
+
+        }
+    }
+
+    private void handlePotionItemEdit(ItemStack clickedItem) {
+        if (clickedItem.isSimilar(editNameButton)) {
+            expectedInputTypePotion = "NAME";
+            potionInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editLoreButton)) {
+            expectedInputTypePotion = "LORE";
+            potionInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editValueButton)) {
+            expectedInputTypePotion = "VALUE";
+            potionInvEditor.closeInventory();
+        }
+        else if (clickedItem.isSimilar(editHealthButton)) {
+
+        }
+        else if (clickedItem.isSimilar(editMinLvlButton)) {
+
+        }
+        else if (clickedItem.isSimilar(editAttributeButton)) {
+
+        }
+    }
+
+    @EventHandler
+    private void onChat(PlayerChatEvent e) {
+        Player p = e.getPlayer();
+        if (p.equals(lootInvEditor)) {
+            e.setCancelled(true);
+            String message = e.getMessage();
+
+            if (message.equalsIgnoreCase("cancel")) {
+                expectedInputTypeLoot = "NONE";
+                openInventory(p, lootItemListInv);
+            }
+            else if (expectedInputTypeLoot.equals("NAME")) {
+                lootItems.get(lootInvEditItemIdentifier).setName(message);
+                expectedInputTypeLoot = "NONE";
+                openInventory(p, lootItemListInv);
+            }
+            else if (expectedInputTypeLoot.equals("LORE")) {
+                ArrayList<String> lores = lootItems.get(lootInvEditItemIdentifier).getLores();
+                if (message.split(":")[0].equals("+")) {
+                    lores.add(message.split(":")[1]);
+                    lootItems.get(lootInvEditItemIdentifier).setLores(lores);
+                    expectedInputTypeLoot = "NONE";
+                    openInventory(p, lootItemListInv);
+                } else {
+                    int loreLine = Integer.parseInt(message.split(":")[0]);
+                    if (loreLine > lores.size() - 1) {
+                        p.sendMessage(format("&cLore index " + loreLine + " out of bounds"));
+                        p.sendMessage(format("&cMax index is " + (lores.size() - 1)));
+                    } else {
+                        String newLoreLine = message.split(":")[1];
+                        if (newLoreLine.equals("-")) lores.set(loreLine, " ");
+                        else if (newLoreLine.equals("remove")) lores.remove(loreLine);
+                        else {
+                            lores.set(loreLine, newLoreLine);
+                        }
+                        lootItems.get(lootInvEditItemIdentifier).setLores(lores);
+                        expectedInputTypeLoot = "NONE";
+                        openInventory(p, lootItemListInv);
+                    }
+                }
+            }
+            else if (expectedInputTypeLoot.equals("VALUE")) {
+                int oldValue = lootItems.get(lootInvEditItemIdentifier).getValue();
+                int newValue;
+                try {
+                    newValue = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newValue = oldValue;
+                }
+                if (newValue != oldValue) {
+                    expectedInputTypeLoot = "NONE";
+                    openInventory(p, lootItemListInv);
+                    lootItems.get(lootInvEditItemIdentifier).setValue(newValue);
+                }
+            }
+            reloadLootMenu();
+        }
+        else if (e.getPlayer().equals(weaponInvEditor)) {
+            e.setCancelled(true);
+            String message = e.getMessage();
+
+            if (message.equalsIgnoreCase("cancel")) {
+                expectedInputTypeWeapon = "NONE";
+                openInventory(p, weaponItemListInv);
+            }
+            else if (expectedInputTypeWeapon.equals("NAME")) {
+                weaponItems.get(weaponInvEditItemIdentifier).setName(message);
+                expectedInputTypeWeapon = "NONE";
+                openInventory(p, weaponItemListInv);
+            }
+            else if (expectedInputTypeWeapon.equals("LORE")) {
+                ArrayList<String> lores = weaponItems.get(weaponInvEditItemIdentifier).getLores();
+                if (message.split(":")[0].equals("+")) {
+                    lores.add(message.split(":")[1]);
+                    weaponItems.get(weaponInvEditItemIdentifier).setLores(lores);
+                    expectedInputTypeWeapon = "NONE";
+                    openInventory(p, weaponItemListInv);
+                } else {
+                    int loreLine = Integer.parseInt(message.split(":")[0]);
+                    if (loreLine > lores.size() - 1) {
+                        p.sendMessage(format("&cLore index " + loreLine + " out of bounds"));
+                        p.sendMessage(format("&cMax index is " + (lores.size() - 1)));
+                    } else {
+                        String newLoreLine = message.split(":")[1];
+                        if (newLoreLine.equals("-")) lores.set(loreLine, " ");
+                        else if (newLoreLine.equals("remove")) lores.remove(loreLine);
+                        else {
+                            lores.set(loreLine, newLoreLine);
+                        }
+                        weaponItems.get(weaponInvEditItemIdentifier).setLores(lores);
+                        expectedInputTypeWeapon = "NONE";
+                        openInventory(p, weaponItemListInv);
+                    }
+                }
+            }
+            else if (expectedInputTypeWeapon.equals("VALUE")) {
+                int oldValue = weaponItems.get(weaponInvEditItemIdentifier).getValue();
+                int newValue;
+                try {
+                    newValue = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newValue = oldValue;
+                }
+                if (newValue != oldValue) {
+                    expectedInputTypeWeapon = "NONE";
+                    openInventory(p, weaponItemListInv);
+                    weaponItems.get(weaponInvEditItemIdentifier).setValue(newValue);
+                }
+            }
+            reloadWeaponMenu();
+        }
+        else if (e.getPlayer().equals(talismanInvEditor)) {
+            e.setCancelled(true);
+            String message = e.getMessage();
+
+            if (message.equalsIgnoreCase("cancel")) {
+                expectedInputTypeTalisman = "NONE";
+                openInventory(p, talismanItemListInv);
+            }
+            else if (expectedInputTypeTalisman.equals("NAME")) {
+                talismanItems.get(talismanInvEditItemIdentifier).setName(message);
+                expectedInputTypeTalisman = "NONE";
+                openInventory(p, talismanItemListInv);
+            }
+            else if (expectedInputTypeTalisman.equals("LORE")) {
+                ArrayList<String> lores = talismanItems.get(talismanInvEditItemIdentifier).getLores();
+                if (message.split(":")[0].equals("+")) {
+                    lores.add(message.split(":")[1]);
+                    talismanItems.get(talismanInvEditItemIdentifier).setLores(lores);
+                    expectedInputTypeTalisman = "NONE";
+                    openInventory(p, talismanItemListInv);
+                } else {
+                    int loreLine = Integer.parseInt(message.split(":")[0]);
+                    if (loreLine > lores.size() - 1) {
+                        p.sendMessage(format("&cLore index " + loreLine + " out of bounds"));
+                        p.sendMessage(format("&cMax index is " + (lores.size() - 1)));
+                    } else {
+                        String newLoreLine = message.split(":")[1];
+                        if (newLoreLine.equals("-")) lores.set(loreLine, " ");
+                        else if (newLoreLine.equals("remove")) lores.remove(loreLine);
+                        else {
+                            lores.set(loreLine, newLoreLine);
+                        }
+                        talismanItems.get(talismanInvEditItemIdentifier).setLores(lores);
+                        expectedInputTypeTalisman = "NONE";
+                        openInventory(p, talismanItemListInv);
+                    }
+                }
+            }
+            else if (expectedInputTypeTalisman.equals("VALUE")) {
+                int oldValue = talismanItems.get(talismanInvEditItemIdentifier).getValue();
+                int newValue;
+                try {
+                    newValue = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newValue = oldValue;
+                }
+                if (newValue != oldValue) {
+                    expectedInputTypeTalisman = "NONE";
+                    openInventory(p, talismanItemListInv);
+                    talismanItems.get(talismanInvEditItemIdentifier).setValue(newValue);
+                }
+            }
+            reloadTalismanMenu();
+        }
+        else if (e.getPlayer().equals(potionInvEditor)) {
+            e.setCancelled(true);
+            String message = e.getMessage();
+
+            if (message.equalsIgnoreCase("cancel")) {
+                expectedInputTypePotion = "NONE";
+                openInventory(p, potionItemListInv);
+            }
+            else if (expectedInputTypePotion.equals("NAME")) {
+                potionItems.get(potionInvEditItemIdentifier).setName(message);
+                expectedInputTypePotion = "NONE";
+                openInventory(p, potionItemListInv);
+            }
+            else if (expectedInputTypePotion.equals("LORE")) {
+                ArrayList<String> lores = potionItems.get(potionInvEditItemIdentifier).getLores();
+                if (message.split(":")[0].equals("+")) {
+                    lores.add(message.split(":")[1]);
+                    potionItems.get(potionInvEditItemIdentifier).setLores(lores);
+                    expectedInputTypePotion = "NONE";
+                    openInventory(p, potionItemListInv);
+                } else {
+                    int loreLine = Integer.parseInt(message.split(":")[0]);
+                    if (loreLine > lores.size() - 1) {
+                        p.sendMessage(format("&cLore index " + loreLine + " out of bounds"));
+                        p.sendMessage(format("&cMax index is " + (lores.size() - 1)));
+                    } else {
+                        String newLoreLine = message.split(":")[1];
+                        if (newLoreLine.equals("-")) lores.set(loreLine, " ");
+                        else if (newLoreLine.equals("remove")) lores.remove(loreLine);
+                        else {
+                            lores.set(loreLine, newLoreLine);
+                        }
+                        potionItems.get(potionInvEditItemIdentifier).setLores(lores);
+                        expectedInputTypePotion = "NONE";
+                        openInventory(p, potionItemListInv);
+                    }
+                }
+            }
+            else if (expectedInputTypePotion.equals("VALUE")) {
+                int oldValue = potionItems.get(potionInvEditItemIdentifier).getValue();
+                int newValue;
+                try {
+                    newValue = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newValue = oldValue;
+                }
+                if (newValue != oldValue) {
+                    expectedInputTypePotion = "NONE";
+                    openInventory(p, potionItemListInv);
+                    potionItems.get(potionInvEditItemIdentifier).setValue(newValue);
+                }
+            }
+            reloadPotionMenu();
+        }
+    }
+
+    private void enableEditModeLootInv(ItemStack item, Player p) {
         NBTItem nbti = new NBTItem(item);
+        lootInvEditor = p;
         lootItemListInEditState = true;
-        Loot lootItem = lootItems.get(nbti.getString("identifier"));
+        lootInvEditItemIdentifier = nbti.getString("identifier");
 
         reloadLootMenu();
-
-        lootItemListInv.setItem(4, item);
     }
 
-    private void enableEditModeWeaponInv(ItemStack item) {
+    private void enableEditModeWeaponInv(ItemStack item, Player p) {
         NBTItem nbti = new NBTItem(item);
+        weaponInvEditor = p;
         weaponItemListInEditState = true;
-        Weapon weaponItem = weaponItems.get(nbti.getString("identifier"));
+        weaponInvEditItemIdentifier = nbti.getString("identifier");
 
         reloadWeaponMenu();
-
-        weaponItemListInv.setItem(4, item);
     }
 
-    private void enableEditModeTalismanInv(ItemStack item) {
+    private void enableEditModeTalismanInv(ItemStack item, Player p) {
         NBTItem nbti = new NBTItem(item);
+        talismanInvEditor = p;
         talismanItemListInEditState = true;
-        Talisman talismanItem = talismanItems.get(nbti.getString("identifier"));
-
+        talismanInvEditItemIdentifier = nbti.getString("identifier");
         reloadTalismanMenu();
-
-        talismanItemListInv.setItem(4, item);
     }
 
-    private void enableEditModePotionInv(ItemStack item) {
+    private void enableEditModePotionInv(ItemStack item, Player p) {
         NBTItem nbti = new NBTItem(item);
+        potionInvEditor = p;
         potionItemListInEditState = true;
-        Potion potionItem = potionItems.get(nbti.getString("identifier"));
+        potionInvEditItemIdentifier = nbti.getString("identifier");
 
         reloadPotionMenu();
-
-        potionItemListInv.setItem(4, item);
     }
 
     // Cancel dragging in our inventory
