@@ -28,10 +28,10 @@ public class LootMenu implements Listener {
     public static Inventory talismanItemListInv;
     public static Inventory weaponItemListInv;
     public static Inventory potionItemListInv;
-    boolean lootItemListInEditState;
-    boolean weaponItemListInEditState;
-    boolean talismanItemListInEditState;
-    boolean potionItemListInEditState;
+    boolean lootItemListInEditState = false;
+    boolean weaponItemListInEditState = false;
+    boolean talismanItemListInEditState = false;
+    boolean potionItemListInEditState = false;
     int lootItemsListPage = 0;
     int weaponItemsListPage = 0;
     int talismanItemsListPage = 0;
@@ -52,6 +52,13 @@ public class LootMenu implements Listener {
     ItemStack removeItemButton;
     ItemStack darkDivider;
     ItemStack lightDivider;
+    ItemStack editNameButton;
+    ItemStack editLoreButton;
+    ItemStack editWorthButton;
+    ItemStack editDamageButton;
+    ItemStack editHealthButton;
+    ItemStack editMinLvlButton;
+    ItemStack editAttributeButton;
 
     public LootMenu() {
         // Create a new inventory
@@ -109,6 +116,34 @@ public class LootMenu implements Listener {
         removeItemButtonLore.add(format("&7Remove a custom item"));
         removeItemButton = createGuiItem("&cRemove Item", removeItemButtonLore, Material.RED_SHULKER_BOX);
 
+        ArrayList<String> editNameButtonLore = new ArrayList<>();
+        editNameButtonLore.add(format("&7Remove a custom item"));
+        editNameButton = createGuiItem("&cRemove Item", editNameButtonLore, Material.NAME_TAG);
+
+        ArrayList<String> editLoreButtonLore = new ArrayList<>();
+        editLoreButtonLore.add(format("&7Remove a custom item"));
+        editLoreButton = createGuiItem("&cRemove Item", editLoreButtonLore, Material.OAK_SIGN);
+
+        ArrayList<String> editWorthButtonLore = new ArrayList<>();
+        editWorthButtonLore.add(format("&7Remove a custom item"));
+        editWorthButton = createGuiItem("&cRemove Item", editWorthButtonLore, Material.RAW_GOLD);
+
+        ArrayList<String> editDamageButtonLore = new ArrayList<>();
+        editDamageButtonLore.add(format("&7Remove a custom item"));
+        editDamageButton = createGuiItem("&cRemove Item", editDamageButtonLore, Material.RED_DYE);
+
+        ArrayList<String> editHealthButtonLore = new ArrayList<>();
+        editHealthButtonLore.add(format("&7Remove a custom item"));
+        editHealthButton = createGuiItem("&cRemove Item", editHealthButtonLore, Material.RED_DYE);
+
+        ArrayList<String> editMinLvlButtonLore = new ArrayList<>();
+        editMinLvlButtonLore.add(format("&7Remove a custom item"));
+        editMinLvlButton = createGuiItem("&cRemove Item", editMinLvlButtonLore, Material.EXPERIENCE_BOTTLE);
+
+        ArrayList<String> editAttributeButtonLore = new ArrayList<>();
+        editAttributeButtonLore.add(format("&7Remove a custom item"));
+        editAttributeButton = createGuiItem("&cRemove Item", editAttributeButtonLore, Material.BOOK);
+
         darkDivider = createGuiItem(" ", new ArrayList<>(), Material.BLACK_STAINED_GLASS_PANE);
         lightDivider = createGuiItem(" ", new ArrayList<>(), Material.GRAY_STAINED_GLASS_PANE);
 
@@ -127,79 +162,135 @@ public class LootMenu implements Listener {
     }
 
     private void reloadLootMenu() {
-        int itemIterator = 0;
-        for (Map.Entry<String, Loot> value : lootItems.entrySet()) {
-            if (itemIterator <= 35) {
-                lootItemListInv.setItem(itemIterator, generateLootItem(value.getValue()));
-                itemIterator++;
+        lootItemListInv.clear();
+        if (!lootItemListInEditState) {
+            int itemIterator = 0;
+            for (Map.Entry<String, Loot> value : lootItems.entrySet()) {
+                if (itemIterator <= 35) {
+                    lootItemListInv.setItem(itemIterator, generateLootItem(value.getValue()));
+                    itemIterator++;
+                }
             }
-        }
-        for (int i = 36; i <= 44; i++) lootItemListInv.setItem(i, darkDivider);
-        for (int i = 45; i <= 53; i++) lootItemListInv.setItem(i, lightDivider);
+            for (int i = 36; i <= 44; i++) lootItemListInv.setItem(i, darkDivider);
+            for (int i = 45; i <= 53; i++) lootItemListInv.setItem(i, lightDivider);
 
-        lootItemListInv.setItem(45, backButton);
-        lootItemListInv.setItem(47, previousPageButton);
-        lootItemListInv.setItem(49, nextPageButton);
-        lootItemListInv.setItem(51, addItemButton);
-        lootItemListInv.setItem(53, removeItemButton);
-        lootItemListInEditState = false;
+            lootItemListInv.setItem(45, backButton);
+            lootItemListInv.setItem(47, previousPageButton);
+            lootItemListInv.setItem(49, nextPageButton);
+            lootItemListInv.setItem(51, addItemButton);
+            lootItemListInv.setItem(53, removeItemButton);
+        } else {
+
+            for (int i = 45; i <= 53; i++) lootItemListInv.setItem(i, lightDivider);
+
+            lootItemListInv.setItem(20, editNameButton);
+            lootItemListInv.setItem(22, editLoreButton);
+            lootItemListInv.setItem(24, editWorthButton);
+
+            lootItemListInv.setItem(45, backButton);
+        }
     }
 
     private void reloadWeaponMenu() {
-        int itemIterator = 0;
-        for (Map.Entry<String, Weapon> value : weaponItems.entrySet()) {
-            if (itemIterator <= 35) {
-                weaponItemListInv.setItem(itemIterator, generateWeaponItem(value.getValue()));
-                itemIterator++;
+        weaponItemListInv.clear();
+        if (!weaponItemListInEditState) {
+            int itemIterator = 0;
+            for (Map.Entry<String, Weapon> value : weaponItems.entrySet()) {
+                if (itemIterator <= 35) {
+                    weaponItemListInv.setItem(itemIterator, generateWeaponItem(value.getValue()));
+                    itemIterator++;
+                }
             }
-        }
-        for (int i = 36; i <= 44; i++) weaponItemListInv.setItem(i, darkDivider);
-        for (int i = 45; i <= 53; i++) weaponItemListInv.setItem(i, lightDivider);
+            for (int i = 36; i <= 44; i++) weaponItemListInv.setItem(i, darkDivider);
+            for (int i = 45; i <= 53; i++) weaponItemListInv.setItem(i, lightDivider);
 
-        weaponItemListInv.setItem(45, backButton);
-        weaponItemListInv.setItem(47, previousPageButton);
-        weaponItemListInv.setItem(49, nextPageButton);
-        weaponItemListInv.setItem(51, addItemButton);
-        weaponItemListInv.setItem(53, removeItemButton);
-        weaponItemListInEditState = false;
+            weaponItemListInv.setItem(45, backButton);
+            weaponItemListInv.setItem(47, previousPageButton);
+            weaponItemListInv.setItem(49, nextPageButton);
+            weaponItemListInv.setItem(51, addItemButton);
+            weaponItemListInv.setItem(53, removeItemButton);
+        } else {
+
+            for (int i = 45; i <= 53; i++) weaponItemListInv.setItem(i, lightDivider);
+
+            weaponItemListInv.setItem(20, editNameButton);
+            weaponItemListInv.setItem(22, editLoreButton);
+            weaponItemListInv.setItem(24, editWorthButton);
+
+            weaponItemListInv.setItem(38, editDamageButton);
+            weaponItemListInv.setItem(40, editMinLvlButton);
+            weaponItemListInv.setItem(42, editAttributeButton);
+
+            weaponItemListInv.setItem(45, backButton);
+        }
     }
 
     private void reloadTalismanMenu() {
-        int itemIterator = 0;
-        for (Map.Entry<String, Talisman> value : talismanItems.entrySet()) {
-            if (itemIterator <= 35) {
-                talismanItemListInv.setItem(itemIterator, generateTalismanItem(value.getValue()));
-                itemIterator++;
+        talismanItemListInv.clear();
+        if (!talismanItemListInEditState) {
+            int itemIterator = 0;
+            for (Map.Entry<String, Talisman> value : talismanItems.entrySet()) {
+                if (itemIterator <= 35) {
+                    talismanItemListInv.setItem(itemIterator, generateTalismanItem(value.getValue()));
+                    itemIterator++;
+                }
             }
-        }
-        for (int i = 36; i <= 44; i++) talismanItemListInv.setItem(i, darkDivider);
-        for (int i = 45; i <= 53; i++) talismanItemListInv.setItem(i, lightDivider);
+            for (int i = 36; i <= 44; i++) talismanItemListInv.setItem(i, darkDivider);
+            for (int i = 45; i <= 53; i++) talismanItemListInv.setItem(i, lightDivider);
 
-        talismanItemListInv.setItem(45, backButton);
-        talismanItemListInv.setItem(47, previousPageButton);
-        talismanItemListInv.setItem(49, nextPageButton);
-        talismanItemListInv.setItem(51, addItemButton);
-        talismanItemListInv.setItem(53, removeItemButton);
-        talismanItemListInEditState = false;
+            talismanItemListInv.setItem(45, backButton);
+            talismanItemListInv.setItem(47, previousPageButton);
+            talismanItemListInv.setItem(49, nextPageButton);
+            talismanItemListInv.setItem(51, addItemButton);
+            talismanItemListInv.setItem(53, removeItemButton);
+        } else {
+
+            for (int i = 45; i <= 53; i++) talismanItemListInv.setItem(i, lightDivider);
+
+            talismanItemListInv.setItem(20, editNameButton);
+            talismanItemListInv.setItem(22, editLoreButton);
+            talismanItemListInv.setItem(24, editWorthButton);
+
+            talismanItemListInv.setItem(38, editHealthButton);
+            talismanItemListInv.setItem(40, editMinLvlButton);
+            talismanItemListInv.setItem(42, editAttributeButton);
+
+            talismanItemListInv.setItem(45, backButton);
+        }
     }
 
     private void reloadPotionMenu() {
-        int itemIterator = 0;
-        for (Map.Entry<String, Potion> value : potionItems.entrySet()) {
-            if (itemIterator <= 35) {
-                potionItemListInv.setItem(itemIterator, generatePotionItem(value.getValue()));
-                itemIterator++;
+        potionItemListInv.clear();
+        if (!potionItemListInEditState) {
+            int itemIterator = 0;
+            for (Map.Entry<String, Potion> value : potionItems.entrySet()) {
+                if (itemIterator <= 35) {
+                    potionItemListInv.setItem(itemIterator, generatePotionItem(value.getValue()));
+                    itemIterator++;
+                }
             }
-        }
-        for (int i = 36; i <= 44; i++) potionItemListInv.setItem(i, darkDivider);
-        for (int i = 45; i <= 53; i++) potionItemListInv.setItem(i, lightDivider);
+            for (int i = 36; i <= 44; i++) potionItemListInv.setItem(i, darkDivider);
+            for (int i = 45; i <= 53; i++) potionItemListInv.setItem(i, lightDivider);
 
-        potionItemListInv.setItem(45, backButton);
-        potionItemListInv.setItem(47, previousPageButton);
-        potionItemListInv.setItem(49, nextPageButton);
-        potionItemListInv.setItem(51, addItemButton);
-        potionItemListInv.setItem(53, removeItemButton);
-        potionItemListInEditState = false;
+            potionItemListInv.setItem(45, backButton);
+            potionItemListInv.setItem(47, previousPageButton);
+            potionItemListInv.setItem(49, nextPageButton);
+            potionItemListInv.setItem(51, addItemButton);
+            potionItemListInv.setItem(53, removeItemButton);
+        } else {
+
+            for (int i = 45; i <= 53; i++) potionItemListInv.setItem(i, lightDivider);
+
+            potionItemListInv.setItem(20, editNameButton);
+            potionItemListInv.setItem(22, editLoreButton);
+            potionItemListInv.setItem(24, editWorthButton);
+
+            potionItemListInv.setItem(38, editHealthButton);
+            potionItemListInv.setItem(40, editMinLvlButton);
+            potionItemListInv.setItem(42, editAttributeButton);
+
+            potionItemListInv.setItem(45, backButton);
+        }
     }
 
     private ItemStack generateLootItem(Loot itemTemplate) {
@@ -488,77 +579,147 @@ public class LootMenu implements Listener {
             else if (clickedItem.isSimilar(potionCategoryItem)) openInventory(p, potionItemListInv);
 
             if (currentInv.equals(lootItemListInv)) {
+                int maxPageNumber = (int) Math.ceil(lootItems.size()/36);
                 if (clickedSlot <= 35) enableEditModeLootInv(clickedItem);
 
                 if (clickedItem.equals(backButton)) {
                     if (lootItemListInEditState) {
+                        lootItemListInEditState = false;
                         reloadLootMenu();
                     } else {
                         openInventory(p, categorySelectionInv);
                     }
                 }
+                else if (clickedItem.isSimilar(previousPageButton)) {
+                    if (lootItemsListPage > 0) {
+                        lootItemsListPage--;
+                    }
+                }
+                else if (clickedItem.isSimilar(nextPageButton)) {
+                    if (lootItemsListPage < maxPageNumber) {
+                        lootItemsListPage++;
+                    }
+                }
+                Bukkit.broadcastMessage(String.valueOf(lootItemsListPage));
             }
+
             if (currentInv.equals(weaponItemListInv)) {
+                int maxPageNumber = (int) Math.ceil(weaponItems.size()/36);
                 if (clickedSlot <= 35) enableEditModeWeaponInv(clickedItem);
 
                 if (clickedItem.equals(backButton)) {
                     if (weaponItemListInEditState) {
+                        weaponItemListInEditState = false;
                         reloadWeaponMenu();
                     } else {
                         openInventory(p, categorySelectionInv);
                     }
                 }
+                else if (clickedItem.isSimilar(previousPageButton)) {
+                    if (weaponItemsListPage > 0) {
+                        weaponItemsListPage--;
+                    }
+                }
+                else if (clickedItem.isSimilar(nextPageButton)) {
+                    if (weaponItemsListPage < maxPageNumber) {
+                        weaponItemsListPage++;
+                    }
+                }
+                Bukkit.broadcastMessage(String.valueOf(weaponItemsListPage));
             }
+
             if (currentInv.equals(talismanItemListInv)) {
+                int maxPageNumber = (int) Math.ceil(talismanItems.size()/36);
                 if (clickedSlot <= 35) enableEditModeTalismanInv(clickedItem);
 
                 if (clickedItem.equals(backButton)) {
                     if (talismanItemListInEditState) {
+                        talismanItemListInEditState = false;
                         reloadTalismanMenu();
                     } else {
                         openInventory(p, categorySelectionInv);
                     }
                 }
+                else if (clickedItem.isSimilar(previousPageButton)) {
+                    if (talismanItemsListPage > 0) {
+                        talismanItemsListPage--;
+                    }
+                }
+                else if (clickedItem.isSimilar(nextPageButton)) {
+                    if (talismanItemsListPage < maxPageNumber) {
+                        talismanItemsListPage++;
+                    }
+                }
+                Bukkit.broadcastMessage(String.valueOf(talismanItemsListPage));
             }
+
             if (currentInv.equals(potionItemListInv)) {
+                int maxPageNumber = (int) Math.ceil(potionItems.size()/36);
                 if (clickedSlot <= 35) enableEditModePotionInv(clickedItem);
 
                 if (clickedItem.equals(backButton)) {
                     if (potionItemListInEditState) {
+                        potionItemListInEditState = false;
                         reloadPotionMenu();
                     } else {
                         openInventory(p, categorySelectionInv);
                     }
                 }
+                else if (clickedItem.isSimilar(previousPageButton)) {
+                    if (potionItemsListPage > 0) {
+                        potionItemsListPage--;
+                    }
+                }
+                else if (clickedItem.isSimilar(nextPageButton)) {
+                    if (potionItemsListPage < maxPageNumber) {
+                        potionItemsListPage++;
+                    }
+                }
+                Bukkit.broadcastMessage(String.valueOf(talismanItemsListPage));
             }
 
         }
     }
 
-    //todo
     private void enableEditModeLootInv(ItemStack item) {
         NBTItem nbti = new NBTItem(item);
         lootItemListInEditState = true;
         Loot lootItem = lootItems.get(nbti.getString("identifier"));
 
-        lootItem.setName("ifthisworksthatwouldbeamazing");
+        reloadLootMenu();
+
+        lootItemListInv.setItem(4, item);
     }
-    //todo
+
     private void enableEditModeWeaponInv(ItemStack item) {
+        NBTItem nbti = new NBTItem(item);
         weaponItemListInEditState = true;
+        Weapon weaponItem = weaponItems.get(nbti.getString("identifier"));
 
+        reloadWeaponMenu();
+
+        weaponItemListInv.setItem(4, item);
     }
-    //todo
+
     private void enableEditModeTalismanInv(ItemStack item) {
+        NBTItem nbti = new NBTItem(item);
         talismanItemListInEditState = true;
+        Talisman talismanItem = talismanItems.get(nbti.getString("identifier"));
 
+        reloadTalismanMenu();
+
+        talismanItemListInv.setItem(4, item);
     }
-    //todo
+
     private void enableEditModePotionInv(ItemStack item) {
+        NBTItem nbti = new NBTItem(item);
         potionItemListInEditState = true;
+        Potion potionItem = potionItems.get(nbti.getString("identifier"));
 
+        reloadPotionMenu();
+
+        potionItemListInv.setItem(4, item);
     }
-
 
     // Cancel dragging in our inventory
     @EventHandler
