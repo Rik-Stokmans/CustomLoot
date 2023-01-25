@@ -74,20 +74,20 @@ public class LootMenu implements Listener {
     ItemStack editMinLvlButton;
     ItemStack editAttributeButton;
 
+    //constructor that generates the lootMenu
     public LootMenu() {
-        // Create a new inventory
+        //creates all the inventories in the lootMenu
         categorySelectionInv = Bukkit.createInventory(null, 27, format("&eCategories"));
-
         lootItemListInv = Bukkit.createInventory(null, 54, format("&eLoot Items"));
         weaponItemListInv = Bukkit.createInventory(null, 54, format("&cWeapons"));
         talismanItemListInv = Bukkit.createInventory(null, 54, format("&aTalismans"));
         potionItemListInv = Bukkit.createInventory(null, 54, format("&bPotions"));
 
-        // Put the items into the inventories
+        //initializes all the items in the inventories
         initializeItems();
     }
 
-    // You can call this whenever you want to put the items in
+    //initializes all the items and adds them to the inventories
     public void initializeItems() {
         //main menu
         ArrayList<String> lootCategoryLore = new ArrayList<>();
@@ -175,15 +175,22 @@ public class LootMenu implements Listener {
         reloadPotionMenu();
     }
 
+    //methods to reload the lootMenu
     private void reloadLootMenu() {
         lootItemListInv.clear();
         if (!lootItemListInEditState) {
+            int pageStartIndex = lootItemsListPage * 36;
+            int pageEndIndex = pageStartIndex + 35;
+            int valueIndex = 0;
             int itemIterator = 0;
             for (Map.Entry<String, Loot> value : lootItems.entrySet()) {
                 if (itemIterator <= 35) {
-                    lootItemListInv.setItem(itemIterator, generateLootItem(value.getValue()));
-                    itemIterator++;
+                    if (valueIndex >= pageStartIndex && valueIndex <= pageEndIndex) {
+                        lootItemListInv.setItem(itemIterator, generateLootItem(value.getValue()));
+                        itemIterator++;
+                    }
                 }
+                valueIndex++;
             }
             for (int i = 36; i <= 44; i++) lootItemListInv.setItem(i, darkDivider);
             for (int i = 45; i <= 53; i++) lootItemListInv.setItem(i, lightDivider);
@@ -206,16 +213,21 @@ public class LootMenu implements Listener {
             lootItemListInv.setItem(49, generateLootItem(lootItems.get(lootInvEditItemIdentifier)));
         }
     }
-
     private void reloadWeaponMenu() {
         weaponItemListInv.clear();
         if (!weaponItemListInEditState) {
+            int pageStartIndex = weaponItemsListPage * 36;
+            int pageEndIndex = pageStartIndex + 35;
+            int valueIndex = 0;
             int itemIterator = 0;
             for (Map.Entry<String, Weapon> value : weaponItems.entrySet()) {
                 if (itemIterator <= 35) {
-                    weaponItemListInv.setItem(itemIterator, generateWeaponItem(value.getValue()));
-                    itemIterator++;
+                    if (valueIndex >= pageStartIndex && valueIndex <= pageEndIndex) {
+                        weaponItemListInv.setItem(itemIterator, generateWeaponItem(value.getValue()));
+                        itemIterator++;
+                    }
                 }
+                valueIndex++;
             }
             for (int i = 36; i <= 44; i++) weaponItemListInv.setItem(i, darkDivider);
             for (int i = 45; i <= 53; i++) weaponItemListInv.setItem(i, lightDivider);
@@ -242,16 +254,21 @@ public class LootMenu implements Listener {
             weaponItemListInv.setItem(49, generateWeaponItem(weaponItems.get(weaponInvEditItemIdentifier)));
         }
     }
-
     private void reloadTalismanMenu() {
         talismanItemListInv.clear();
         if (!talismanItemListInEditState) {
+            int pageStartIndex = talismanItemsListPage * 36;
+            int pageEndIndex = pageStartIndex + 35;
+            int valueIndex = 0;
             int itemIterator = 0;
             for (Map.Entry<String, Talisman> value : talismanItems.entrySet()) {
                 if (itemIterator <= 35) {
-                    talismanItemListInv.setItem(itemIterator, generateTalismanItem(value.getValue()));
-                    itemIterator++;
+                    if (valueIndex >= pageStartIndex && valueIndex <= pageEndIndex) {
+                        talismanItemListInv.setItem(itemIterator, generateTalismanItem(value.getValue()));
+                        itemIterator++;
+                    }
                 }
+                valueIndex++;
             }
             for (int i = 36; i <= 44; i++) talismanItemListInv.setItem(i, darkDivider);
             for (int i = 45; i <= 53; i++) talismanItemListInv.setItem(i, lightDivider);
@@ -278,16 +295,21 @@ public class LootMenu implements Listener {
             talismanItemListInv.setItem(49, generateTalismanItem(talismanItems.get(talismanInvEditItemIdentifier)));
         }
     }
-
     private void reloadPotionMenu() {
         potionItemListInv.clear();
         if (!potionItemListInEditState) {
+            int pageStartIndex = potionItemsListPage * 36;
+            int pageEndIndex = pageStartIndex + 35;
+            int valueIndex = 0;
             int itemIterator = 0;
             for (Map.Entry<String, Potion> value : potionItems.entrySet()) {
                 if (itemIterator <= 35) {
-                    potionItemListInv.setItem(itemIterator, generatePotionItem(value.getValue()));
-                    itemIterator++;
+                    if (valueIndex >= pageStartIndex && valueIndex <= pageEndIndex) {
+                        potionItemListInv.setItem(itemIterator, generatePotionItem(value.getValue()));
+                        itemIterator++;
+                    }
                 }
+                valueIndex++;
             }
             for (int i = 36; i <= 44; i++) potionItemListInv.setItem(i, darkDivider);
             for (int i = 45; i <= 53; i++) potionItemListInv.setItem(i, lightDivider);
@@ -315,6 +337,7 @@ public class LootMenu implements Listener {
         }
     }
 
+    //methods to generate custom items for the gui
     private ItemStack generateLootItem(Loot itemTemplate) {
         ItemStack item = new ItemStack(itemTemplate.getItemType(), 1);
         ItemMeta meta = item.getItemMeta();
@@ -347,7 +370,6 @@ public class LootMenu implements Listener {
 
         return item;
     }
-
     private ItemStack generateWeaponItem(Weapon itemTemplate) {
         ItemStack item = new ItemStack(itemTemplate.getItemType(), 1);
         ItemMeta meta = item.getItemMeta();
@@ -404,7 +426,6 @@ public class LootMenu implements Listener {
 
         return item;
     }
-
     private ItemStack generateTalismanItem(Talisman itemTemplate) {
         ItemStack item = new ItemStack(itemTemplate.getItemType(), 1);
         ItemMeta meta = item.getItemMeta();
@@ -462,7 +483,6 @@ public class LootMenu implements Listener {
 
         return item;
     }
-
     private ItemStack generatePotionItem(Potion itemTemplate) {
         ItemStack item = new ItemStack(itemTemplate.getItemType(), 1);
         ItemMeta meta = item.getItemMeta();
@@ -521,7 +541,7 @@ public class LootMenu implements Listener {
         return item;
     }
 
-    // Nice little method to create a gui item with a custom name, and description
+    //constructs the item and returns it with lore and custom nbt
     protected ItemStack createGuiItem(String name, ArrayList<String> lore, Material itemType) {
         final ItemStack item = new ItemStack(itemType, 1);
         final ItemMeta meta = item.getItemMeta();
@@ -534,7 +554,7 @@ public class LootMenu implements Listener {
         return item;
     }
 
-    // You can open the inventory with this
+    //opens the lootMenu to the given player
     public void openInventory(final HumanEntity ent, Inventory inv) {
         if (inv.equals(categorySelectionInv) || !(inv.getViewers().size() > 0)) {
             ent.openInventory(inv);
@@ -553,6 +573,7 @@ public class LootMenu implements Listener {
         }
     }
 
+    //keeps track on when the loot menu is closed
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
         Inventory inv = e.getInventory();
@@ -570,7 +591,7 @@ public class LootMenu implements Listener {
         }
     }
 
-    // Check for clicks on items
+    //handles the clicks in the lootMenu
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent e) {
         Inventory currentInv = e.getInventory();
@@ -617,11 +638,13 @@ public class LootMenu implements Listener {
                     else if (clickedItem.isSimilar(previousPageButton)) {
                         if (lootItemsListPage > 0) {
                             lootItemsListPage--;
+                            reloadLootMenu();
                         }
                     }
                     else if (clickedItem.isSimilar(nextPageButton)) {
                         if (lootItemsListPage < maxPageNumber) {
                             lootItemsListPage++;
+                            reloadLootMenu();
                         }
                     }
                     Bukkit.broadcastMessage(String.valueOf(lootItemsListPage));
@@ -653,11 +676,13 @@ public class LootMenu implements Listener {
                     else if (clickedItem.isSimilar(previousPageButton)) {
                         if (weaponItemsListPage > 0) {
                             weaponItemsListPage--;
+                            reloadWeaponMenu();
                         }
                     }
                     else if (clickedItem.isSimilar(nextPageButton)) {
                         if (weaponItemsListPage < maxPageNumber) {
                             weaponItemsListPage++;
+                            reloadWeaponMenu();
                         }
                     }
                     Bukkit.broadcastMessage(String.valueOf(weaponItemsListPage));
@@ -689,11 +714,13 @@ public class LootMenu implements Listener {
                     else if (clickedItem.isSimilar(previousPageButton)) {
                         if (talismanItemsListPage > 0) {
                             talismanItemsListPage--;
+                            reloadTalismanMenu();
                         }
                     }
                     else if (clickedItem.isSimilar(nextPageButton)) {
                         if (talismanItemsListPage < maxPageNumber) {
                             talismanItemsListPage++;
+                            reloadTalismanMenu();
                         }
                     }
                     Bukkit.broadcastMessage(String.valueOf(talismanItemsListPage));
@@ -725,11 +752,13 @@ public class LootMenu implements Listener {
                     else if (clickedItem.isSimilar(previousPageButton)) {
                         if (potionItemsListPage > 0) {
                             potionItemsListPage--;
+                            reloadPotionMenu();
                         }
                     }
                     else if (clickedItem.isSimilar(nextPageButton)) {
                         if (potionItemsListPage < maxPageNumber) {
                             potionItemsListPage++;
+                            reloadPotionMenu();
                         }
                     }
                     Bukkit.broadcastMessage(String.valueOf(talismanItemsListPage));
@@ -746,6 +775,7 @@ public class LootMenu implements Listener {
         }
     }
 
+    //handles for the item edits
     private void handleLootItemEdit(ItemStack clickedItem) {
         if (clickedItem.isSimilar(editNameButton)) {
             expectedInputTypeLoot = "NAME";
@@ -760,7 +790,6 @@ public class LootMenu implements Listener {
             lootInvEditor.closeInventory();
         }
     }
-
     private void handleWeaponItemEdit(ItemStack clickedItem) {
         if (clickedItem.isSimilar(editNameButton)) {
             expectedInputTypeWeapon = "NAME";
@@ -775,16 +804,18 @@ public class LootMenu implements Listener {
             weaponInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editDamageButton)) {
-
+            expectedInputTypeWeapon = "DAMAGE";
+            weaponInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editMinLvlButton)) {
-
+            expectedInputTypeWeapon = "MINLVL";
+            weaponInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editAttributeButton)) {
-
+            expectedInputTypeWeapon = "ATTRIBUTE";
+            weaponInvEditor.closeInventory();
         }
     }
-
     private void handleTalismanItemEdit(ItemStack clickedItem) {
         if (clickedItem.isSimilar(editNameButton)) {
             expectedInputTypeTalisman = "NAME";
@@ -799,16 +830,18 @@ public class LootMenu implements Listener {
             talismanInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editHealthButton)) {
-
+            expectedInputTypeTalisman = "HEALTH";
+            talismanInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editMinLvlButton)) {
-
+            expectedInputTypeTalisman = "MINLVL";
+            talismanInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editAttributeButton)) {
-
+            expectedInputTypeTalisman = "ATTRIBUTE";
+            talismanInvEditor.closeInventory();
         }
     }
-
     private void handlePotionItemEdit(ItemStack clickedItem) {
         if (clickedItem.isSimilar(editNameButton)) {
             expectedInputTypePotion = "NAME";
@@ -823,16 +856,20 @@ public class LootMenu implements Listener {
             potionInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editHealthButton)) {
-
+            expectedInputTypePotion = "HEALTH";
+            potionInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editMinLvlButton)) {
-
+            expectedInputTypePotion = "MINLVL";
+            potionInvEditor.closeInventory();
         }
         else if (clickedItem.isSimilar(editAttributeButton)) {
-
+            expectedInputTypePotion = "ATTRIBUTE";
+            potionInvEditor.closeInventory();
         }
     }
 
+    //takes input when you want to edit an item
     @EventHandler
     private void onChat(PlayerChatEvent e) {
         Player p = e.getPlayer();
@@ -887,6 +924,8 @@ public class LootMenu implements Listener {
                     expectedInputTypeLoot = "NONE";
                     openInventory(p, lootItemListInv);
                     lootItems.get(lootInvEditItemIdentifier).setValue(newValue);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
                 }
             }
             reloadLootMenu();
@@ -942,6 +981,42 @@ public class LootMenu implements Listener {
                     expectedInputTypeWeapon = "NONE";
                     openInventory(p, weaponItemListInv);
                     weaponItems.get(weaponInvEditItemIdentifier).setValue(newValue);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
+                }
+            }
+            else if (expectedInputTypeWeapon.equals("DAMAGE")) {
+                int oldDamage = weaponItems.get(weaponInvEditItemIdentifier).getDamage();
+                int newDamage;
+                try {
+                    newDamage = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newDamage = oldDamage;
+                }
+                if (newDamage != oldDamage) {
+                    expectedInputTypeWeapon = "NONE";
+                    openInventory(p, weaponItemListInv);
+                    weaponItems.get(weaponInvEditItemIdentifier).setDamage(newDamage);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
+                }
+            }
+            else if (expectedInputTypeWeapon.equals("MINLVL")) {
+                int oldMinLvl = weaponItems.get(weaponInvEditItemIdentifier).getMinLvl();
+                int newMinLvl;
+                try {
+                    newMinLvl = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newMinLvl = oldMinLvl;
+                }
+                if (newMinLvl != oldMinLvl) {
+                    expectedInputTypeWeapon = "NONE";
+                    openInventory(p, weaponItemListInv);
+                    weaponItems.get(weaponInvEditItemIdentifier).setMinLvl(newMinLvl);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
                 }
             }
             reloadWeaponMenu();
@@ -997,6 +1072,42 @@ public class LootMenu implements Listener {
                     expectedInputTypeTalisman = "NONE";
                     openInventory(p, talismanItemListInv);
                     talismanItems.get(talismanInvEditItemIdentifier).setValue(newValue);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
+                }
+            }
+            else if (expectedInputTypeTalisman.equals("HEALTH")) {
+                int oldHealth = talismanItems.get(talismanInvEditItemIdentifier).getHealth();
+                int newHealth;
+                try {
+                    newHealth = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newHealth = oldHealth;
+                }
+                if (newHealth != oldHealth) {
+                    expectedInputTypeTalisman = "NONE";
+                    openInventory(p, talismanItemListInv);
+                    talismanItems.get(talismanInvEditItemIdentifier).setHealth(newHealth);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
+                }
+            }
+            else if (expectedInputTypeTalisman.equals("MINLVL")) {
+                int oldMinLvl = talismanItems.get(talismanInvEditItemIdentifier).getMinLvl();
+                int newMinLvl;
+                try {
+                    newMinLvl = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newMinLvl = oldMinLvl;
+                }
+                if (newMinLvl != oldMinLvl) {
+                    expectedInputTypeTalisman = "NONE";
+                    openInventory(p, talismanItemListInv);
+                    talismanItems.get(talismanInvEditItemIdentifier).setMinLvl(newMinLvl);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
                 }
             }
             reloadTalismanMenu();
@@ -1052,12 +1163,49 @@ public class LootMenu implements Listener {
                     expectedInputTypePotion = "NONE";
                     openInventory(p, potionItemListInv);
                     potionItems.get(potionInvEditItemIdentifier).setValue(newValue);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
+                }
+            }
+            else if (expectedInputTypePotion.equals("HEALTH")) {
+                int oldHealth = potionItems.get(potionInvEditItemIdentifier).getHealth();
+                int newHealth;
+                try {
+                    newHealth = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newHealth = oldHealth;
+                }
+                if (newHealth != oldHealth) {
+                    expectedInputTypePotion = "NONE";
+                    openInventory(p, potionItemListInv);
+                    potionItems.get(potionInvEditItemIdentifier).setHealth(newHealth);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
+                }
+            }
+            else if (expectedInputTypePotion.equals("MINLVL")) {
+                int oldMinLvl = potionItems.get(potionInvEditItemIdentifier).getMinLvl();
+                int newMinLvl;
+                try {
+                    newMinLvl = (Integer.parseInt(message));
+                } catch (NumberFormatException exception) {
+                    p.sendMessage(format("&7You have to give an integer number"));
+                    newMinLvl = oldMinLvl;
+                }
+                if (newMinLvl != oldMinLvl) {
+                    expectedInputTypePotion = "NONE";
+                    openInventory(p, potionItemListInv);
+                    potionItems.get(potionInvEditItemIdentifier).setMinLvl(newMinLvl);
+                } else {
+                    p.sendMessage(format("&cYour given input is identical to the current value"));
                 }
             }
             reloadPotionMenu();
         }
     }
 
+    //enable edit mode functions
     private void enableEditModeLootInv(ItemStack item, Player p) {
         NBTItem nbti = new NBTItem(item);
         lootInvEditor = p;
@@ -1066,7 +1214,6 @@ public class LootMenu implements Listener {
 
         reloadLootMenu();
     }
-
     private void enableEditModeWeaponInv(ItemStack item, Player p) {
         NBTItem nbti = new NBTItem(item);
         weaponInvEditor = p;
@@ -1075,7 +1222,6 @@ public class LootMenu implements Listener {
 
         reloadWeaponMenu();
     }
-
     private void enableEditModeTalismanInv(ItemStack item, Player p) {
         NBTItem nbti = new NBTItem(item);
         talismanInvEditor = p;
@@ -1083,7 +1229,6 @@ public class LootMenu implements Listener {
         talismanInvEditItemIdentifier = nbti.getString("identifier");
         reloadTalismanMenu();
     }
-
     private void enableEditModePotionInv(ItemStack item, Player p) {
         NBTItem nbti = new NBTItem(item);
         potionInvEditor = p;
