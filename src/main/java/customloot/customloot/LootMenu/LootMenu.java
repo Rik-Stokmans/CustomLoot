@@ -379,8 +379,8 @@ public class LootMenu implements Listener {
 
         ArrayList<String> lores = new ArrayList<>();
         lores.add("");
-        lores.add("&cDamage&f: &c" + itemTemplate.getDamage());
-        lores.add("&7Lv. Min: " + itemTemplate.getMinLvl());
+        lores.add("&cDamage: &c" + itemTemplate.getDamage());
+        lores.add("&eLv. Min: " + itemTemplate.getMinLvl());
         lores.add("");
 
         //Attributes
@@ -434,8 +434,8 @@ public class LootMenu implements Listener {
 
         ArrayList<String> lores = new ArrayList<>();
         lores.add("");
-        lores.add("&4Health&f: &4" + itemTemplate.getHealth());
-        lores.add("&7Lv. Min: " + itemTemplate.getMinLvl());
+        lores.add("&4Health +&4" + itemTemplate.getHealth());
+        lores.add("&eLv. Min: " + itemTemplate.getMinLvl());
         lores.add("");
 
         //Attributes
@@ -491,8 +491,8 @@ public class LootMenu implements Listener {
 
         ArrayList<String> lores = new ArrayList<>();
         lores.add("");
-        lores.add("&4Health&f: &4" + itemTemplate.getHealth());
-        lores.add("&7Lv. Min: " + itemTemplate.getMinLvl());
+        lores.add("&4Health +&4" + itemTemplate.getHealth());
+        lores.add("&eLv. Min: " + itemTemplate.getMinLvl());
         lores.add("");
 
         //Attributes
