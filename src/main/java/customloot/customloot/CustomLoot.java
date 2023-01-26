@@ -20,7 +20,7 @@ public final class CustomLoot extends JavaPlugin {
         // Plugin startup logic
         String variablePath = getDataFolder().getAbsoluteFile().toString();
         VariableHandler.extractVariables(variablePath);
-        /*
+        /* test items
         ArrayList<String> lores = new ArrayList<>();
         lores.add("&7nice lore");
         lores.add("&7very nice lore");
